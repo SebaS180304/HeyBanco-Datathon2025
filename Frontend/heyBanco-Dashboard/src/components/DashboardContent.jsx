@@ -13,9 +13,9 @@ import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import PeopleIcon from '@mui/icons-material/People';
 import PercentIcon from '@mui/icons-material/Percent';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import { kpiData, activityData, clientsData, tipoVentaData, girosData, comerciosData } from './constants/index.js';
+import { kpiData, activityData, clientsData } from './constants/index.js';
 
-const DashboardContent = () => {
+const DashboardContent = ({ comerciosData, girosData, tipoVentaData }) => {
     // State para filtros
     const [filters, setFilters] = useState({
         idEstado: null,

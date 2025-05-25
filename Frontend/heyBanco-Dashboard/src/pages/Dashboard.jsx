@@ -1,17 +1,84 @@
-import React, { useState } from 'react';
-import { Box, CssBaseline, Toolbar } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, CircularProgress, CssBaseline, Dialog, Toolbar, Typography } from '@mui/material';
 import Sidebar from '../components/Sidebar';
 import Navbar from '../components/Navbar';
 import DashboardContent from '../components/DashboardContent';
+import axios from '../api/axios';
+
+const COMERCIOS_URL = '/Comercio';
+const GIROS_URL = '/GiroCommercio';
+const TRANSACTION_URL = '/Transaction';
+const USER_URL = '/User';
+const FILTER_URL = '/Filter';
 
 const drawerWidth = 240;
 
 const Dashboard = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
+  const [comercios, setComercios] = useState(null);
+  const [giros, setGiros] = useState(null);
+  const [transactions, setTransactions] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [filters, setFilters] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchComercio = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get(COMERCIOS_URL);
+        setComercios(response.data);
+      } catch (error) {
+        console.error('Error fetching comercios:', error.message);
+      } finally {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+      }
+    }
+    const fetchGiros = async () => {
+      try {
+        const response = await axios.get(GIROS_URL);
+        setGiros(response.data);
+      } catch (error) {
+        console.error('Error fetching giros:', error.message);
+      } finally {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+      }
+    }
+    const fetchTransactions = async () => {
+      try {
+        const response = await axios.get(TRANSACTION_URL);
+        setTransactions(response.data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error.message);
+      } finally {
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        setLoading(false);
+      }
+    }
+    fetchTransactions();
+    fetchComercio();
+    fetchGiros();
+  }, []);
+
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
+
+  if (loading) {
+    return (
+        <Dialog open={true} PaperProps={{ sx: { textAlign: 'center', padding: 4 } }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress sx={{ color: 'primary' }} />
+            </Box>
+            <Typography variant="h6" sx={{ mt: 2 }}>
+                Cargando Información...
+            </Typography>
+        </Dialog>
+    );
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -23,7 +90,7 @@ const Dashboard = () => {
         sx={{ flexGrow: 1, bgcolor: 'background.default', width: { sm: `calc(100% - ${drawerWidth}px)`}, }}
       >
         <Toolbar />
-        <DashboardContent />
+        <DashboardContent comerciosData={comercios} girosData={giros} tipoVentaData={transactions} />
       </Box>
     </Box>
   )
