@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, Grid } from '@mui/material';
 import FiltersBar from './FiltersBar';
 import KpiCard from './KpiCard';
@@ -15,22 +15,13 @@ import PercentIcon from '@mui/icons-material/Percent';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { kpiData, activityData, clientsData } from './constants/index.js';
 
-const DashboardContent = ({ comerciosData, girosData, tipoVentaData }) => {
-    // State para filtros
-    const [filters, setFilters] = useState({
-        idEstado: null,
-        genero: [],
-        tipoPersona: [],
-        actividad: null,
-    });
-
-    // Handler para aplicar filtros desde FiltersBar
-    const handleApplyFilters = (newFilters) => {
-        setFilters(newFilters);
-        // Aquí podrías disparar fetch de datos con los filtros aplicados
-        console.log('Aplicando filtros:', newFilters);
-    };
-
+const DashboardContent = ({
+  comerciosData,
+  girosData,
+  tipoVentaData,
+  filters,
+  onApplyFilters
+}) => {
     // Asignar valores de KPI según lógica y filtros
     const { gastoRecurrente, clientesRecurrentes, precisionModelo, promedioGasto } = kpiData;
 
@@ -41,9 +32,9 @@ const DashboardContent = ({ comerciosData, girosData, tipoVentaData }) => {
     else if (precisionPercent >= 60) precisionColor = 'warning';
 
   return (
-    <Box sx={{ p: 3, bgcolor: 'background.default' }}>	
+    <Box sx={{ p: 3, bgcolor: 'background.default' }}>
       {/* Fila 1: Barra de filtros */}
-      <FiltersBar onApply={handleApplyFilters} />
+      <FiltersBar defaultValues={filters} onApply={onApplyFilters} />
 
       {/* Fila 2: KPIs */}
       <Grid

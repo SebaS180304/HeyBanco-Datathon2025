@@ -20,7 +20,12 @@ const Dashboard = () => {
   const [giros, setGiros] = useState(null);
   const [transactions, setTransactions] = useState(null);
   const [users, setUsers] = useState(null);
-  const [filters, setFilters] = useState(null);
+  const [filters, setFilters] = useState(() => {
+    const saved = localStorage.getItem('filters');
+    return saved
+      ? JSON.parse(saved)
+      : { ciudad: 0, gender: { Men:true, Female:true, Undefined:true }, Tperson:{ ActividadE:true, SinActividadE:true }, ActividadEmpresarial: '' };
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -56,6 +61,7 @@ const Dashboard = () => {
       } finally {
         await new Promise(resolve => setTimeout(resolve, 1000));
         setLoading(false);
+        console.log('Aplicando filtros:', filters);
       }
     }
     fetchTransactions();
@@ -65,6 +71,21 @@ const Dashboard = () => {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const applyFilters = async (newFilters) => {
+    setFilters(newFilters);
+    localStorage.setItem('filters', JSON.stringify(newFilters));
+    try {
+      const resp = await axios.post(FILTER_URL, newFilters);
+      setComercios(resp.data.comercios);
+      setGiros(resp.data.giros);
+      setTransactions(resp.data.transactions);
+    } catch (err) {
+      console.error('Error al aplicar filtros:', err);
+    }
+    // forzar recarga de la página
+    window.location.reload();
   };
 
   if (loading) {
@@ -87,10 +108,16 @@ const Dashboard = () => {
       <Sidebar drawerWidth={drawerWidth} mobileOpen={mobileOpen} onDrawerToggle={handleDrawerToggle} />
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default', width: { sm: `calc(100% - ${drawerWidth}px)`}, }}
+        sx={{ flexGrow: 1, bgcolor: 'background.default', width: { sm: `calc(100% - ${drawerWidth}px)`} }}
       >
         <Toolbar />
-        <DashboardContent comerciosData={comercios} girosData={giros} tipoVentaData={transactions} />
+        <DashboardContent
+          comerciosData={comercios}
+          girosData={giros}
+          tipoVentaData={transactions}
+          filters={filters}
+          onApplyFilters={applyFilters}
+        />
       </Box>
     </Box>
   )

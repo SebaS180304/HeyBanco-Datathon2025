@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Box, Grid, Autocomplete, TextField, Button, Checkbox } from '@mui/material';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -33,34 +33,86 @@ const activityOptions = ['EMPLEADO DEL SECTOR SERVICIOS',
     'JUBILADO', 'ADMINISTRACION DE INMUEBLES', 'AGENTE DE SEGUROS',
     'TELEDIFUSORA'];
 
-const FiltersBar = ({ onApply }) => {
-  const [idEstado, setIdEstado] = useState(null);
-  const [genero, setGenero] = useState([]);
-  const [tipoPersona, setTipoPersona] = useState([]);
-  const [actividad, setActividad] = useState(null);
+const FiltersBar = ({ 
+  defaultValues = {
+    ciudad: 0,
+    gender: { Men: true, Female: true, Undefined: true },
+    Tperson: { ActividadE: true, SinActividadE: true },
+    ActividadEmpresarial: ''
+  },
+  onApply
+}) => {
+  // 1) Desestructuramos defaults
+  const {
+    ciudad: defCiudad,
+    gender: defGender,
+    Tperson: defTperson,
+    ActividadEmpresarial: defActividad
+  } = defaultValues;
 
+  // 2) Creamos los arrays de opciones iniciales
+  const initialGender = useMemo(() => {
+    const arr = [];
+    if (defGender.Men)       arr.push('Masculino');
+    if (defGender.Female)    arr.push('Femenino');
+    if (defGender.Undefined) arr.push('Sin definir');
+    return arr;
+  }, [defGender]);
+
+  const initialTperson = useMemo(() => {
+    const arr = [];
+    if (defTperson.ActividadE)    arr.push('Con Actividad Empresarial');
+    if (defTperson.SinActividadE) arr.push('Sin Actividad Empresarial');
+    return arr;
+  }, [defTperson]);
+
+  // 3) Estados locales
+  const [ciudad, setCiudad]                 = useState(defCiudad);
+  const [gender, setGender]                 = useState(initialGender);
+  const [Tperson, setTperson]               = useState(initialTperson);
+  const [ActividadEmpresarial, setActividadEmpresarial] = useState(defActividad);
+
+  // 4) Al aplicar, reconvertimos a la forma que espera la API
   const handleApply = () => {
-    onApply({ idEstado, tipoPersona, genero, actividad });
+    const genderObj = {
+      Men:       gender.includes('Masculino'),
+      Female:    gender.includes('Femenino'),
+      Undefined: gender.includes('Sin definir'),
+    };
+    const TpersonObj = {
+      ActividadE:    Tperson.includes('Con Actividad Empresarial'),
+      SinActividadE: Tperson.includes('Sin Actividad Empresarial'),
+    };
+    // si ciudad está vacío o no es número, lo enviamos como 0
+    const ciudadValue = typeof ciudad === 'number' && ciudad > 0 ? ciudad : 0;
+    // si ActividadEmpresarial viene null/undefined, mandamos cadena vacía
+    const actividadValue = ActividadEmpresarial ?? '';
+    onApply({
+      ciudad: ciudadValue,
+      gender:    genderObj,
+      Tperson:   TpersonObj,
+      ActividadEmpresarial: actividadValue
+    });
   };
 
   // Ancho dinámico para ID Estado
   const label = 'ID Estado';
-  const selectedLength = idEstado ? idEstado.toString().length : label.length;
+  const selectedLength = ciudad ? ciudad.toString().length : label.length;
   const widthCh = selectedLength + 4;
 
   // Ancho dinámico para Tipo de persona
   const tipoLabel = 'Tipo de persona';
-  const tipoSelected = tipoPersona.length > 0 ? tipoPersona.join(', ') : tipoLabel;
+  const tipoSelected = Tperson.length > 0 ? Tperson.join(', ') : tipoLabel;
   const tipoWidthCh = tipoSelected.length + 4;
 
   // Ancho dinámico para Género
   const generoLabel = 'Género';
-  const generoSelected = genero.length > 0 ? genero.join(', ') : generoLabel;
+  const generoSelected = gender.length > 0 ? gender.join(', ') : generoLabel;
   const generoWidthCh = generoSelected.length + 4;
 
   // Ancho dinámico para Actividad Empresarial
   const actividadLabel = 'Actividad Empresarial';
-  const actividadSelected = actividad || actividadLabel;
+  const actividadSelected = ActividadEmpresarial || actividadLabel;
   const actividadWidthCh = actividadSelected.length + 4;
 
   const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
@@ -72,9 +124,9 @@ const FiltersBar = ({ onApply }) => {
         {/* Filtro 1: ID Estado */}
         <Grid item>
           <Autocomplete
-            value={idEstado}
+            value={ciudad}
             size="small"
-            onChange={(e, newVal) => setIdEstado(newVal)}
+            onChange={(e, newVal) => setCiudad(newVal ?? 0)}   // si newVal es null/undefined ➞ 0
             options={stateOptions}
             sx={{ width: `${widthCh}ch`, minWidth: `${label.length + 4}ch` }}
             renderInput={(params) => (
@@ -102,8 +154,8 @@ const FiltersBar = ({ onApply }) => {
             disableCloseOnSelect
             size="small"
             options={personTypeOptions}
-            value={tipoPersona}
-            onChange={(e, newVal) => setTipoPersona(newVal)}
+            value={Tperson}
+            onChange={(e, newVal) => setTperson(newVal)}
             sx={{ width: `${tipoWidthCh}ch`, minWidth: `${tipoLabel.length + 4}ch` }}
             renderOption={(props, option, { selected }) => (
               <li {...props}>
@@ -136,8 +188,8 @@ const FiltersBar = ({ onApply }) => {
             disableCloseOnSelect
             size="small"
             options={genderOptions}
-            value={genero}
-            onChange={(e, newVal) => setGenero(newVal)}
+            value={gender}
+            onChange={(e, newVal) => setGender(newVal)}
             sx={{ width: `${generoWidthCh}ch`, minWidth: `${generoLabel.length + 12}ch` }}
             renderOption={(props, option, { selected }) => (
               <li {...props}>
@@ -166,9 +218,9 @@ const FiltersBar = ({ onApply }) => {
         {/* Filtro 4: Actividad Empresarial */}
         <Grid item>
           <Autocomplete
-            value={actividad}
+            value={ActividadEmpresarial}
             size="small"
-            onChange={(e, newVal) => setActividad(newVal)}
+            onChange={(e, newVal) => setActividadEmpresarial(newVal ?? '')}
             options={activityOptions}
             sx={{ width: `${actividadWidthCh}ch`, minWidth: `${actividadLabel.length + 12}ch` }}
             renderInput={(params) => (
