@@ -1,0 +1,6 @@
+@DatathonNAPI_HostAddress = http://localhost:5231
+
+GET {{DatathonNAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatathonAPI", "DatathonAPI\DatathonAPI.csproj", "{184A5154-A0BA-432B-80E5-9120CCDBF056}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatathonNAPI", "DatathonNAPI\DatathonNAPI.csproj", "{4CAF3E08-7B06-4655-A343-A1613647FC0E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{184A5154-A0BA-432B-80E5-9120CCDBF056}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{184A5154-A0BA-432B-80E5-9120CCDBF056}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{184A5154-A0BA-432B-80E5-9120CCDBF056}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{184A5154-A0BA-432B-80E5-9120CCDBF056}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4CAF3E08-7B06-4655-A343-A1613647FC0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4CAF3E08-7B06-4655-A343-A1613647FC0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4CAF3E08-7B06-4655-A343-A1613647FC0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4CAF3E08-7B06-4655-A343-A1613647FC0E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
