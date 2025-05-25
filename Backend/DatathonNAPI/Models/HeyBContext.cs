@@ -22,7 +22,6 @@ public partial class HeyBContext : DbContext
 
     public virtual DbSet<BaseTransaccionesFinal> BaseTransaccionesFinals { get; set; }
 
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -84,7 +83,7 @@ public partial class HeyBContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("id");
             entity.Property(e => e.Monto)
-                .HasMaxLength(50)
+                .HasPrecision(10)
                 .HasColumnName("monto");
             entity.Property(e => e.TipoVenta)
                 .HasMaxLength(50)

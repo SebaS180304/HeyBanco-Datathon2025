@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace DatathonNAPI.DTO
 {
-    public class QueryRequest
+    public class PercentageFD
     {
-        public int page { get; set; }
-        public int take { get; set; }
+        public float Digital { get; set; }
+        public float Fisica { get; set; }
     }
 }

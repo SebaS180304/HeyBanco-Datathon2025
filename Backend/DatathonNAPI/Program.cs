@@ -57,6 +57,10 @@ builder.Services.AddAuthorization();
 builder.Services.AddScoped<ILogIn>(provider => 
     new LogIn(provider.GetRequiredService<HeyBContext>(), encodingKey, Issuer, Audience, TokenExpirationTime));
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITransactionTypeService, TransactionTypeService>();
+builder.Services.AddScoped<IGiroComercioService, GiroComercioService>();
+builder.Services.AddScoped<IComercioService, ComercioService>();
+builder.Services.AddSingleton<IGlobalQueryService, GlobalQueryService>();
 // Configure Entity Framework with MySQL
 
 builder.Services.AddDbContext<HeyBContext>(options =>
@@ -92,9 +96,6 @@ app.UseCors("AllowAllOrigins");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-
-
 
 
 app.Run();

@@ -22,10 +22,17 @@ namespace DatathonNAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<User>>> QuerySetter( QueryRequest query)
+        public async Task<ActionResult<List<User>>> QuerySetter(QueryRequest query)
         {
-            var response = await userService.GetUsers(query);
+            var response = await userService.GetUsers(query.page, query.take);
             return Ok(response);
+        }
+        [HttpPost]
+        [Route("/Filter")]
+        public async Task<ActionResult> QuerySetter(FilterInput newFilter)
+        {
+            var res = userService.SetFilter(newFilter);
+            return NoContent();
         }
     }
 }

@@ -6,9 +6,9 @@ using DatathonNAPI.DTO;
 
 namespace DatathonNAPI.Interfaces
 {
-    public interface IUserService
+    public interface IComercioService
     {
-        public Task<List<User>> GetUsers(int page, int take);
-        public bool SetFilter(FilterInput filter);
+        public Task<Top5Values> TopComercios();
+
     }
 }

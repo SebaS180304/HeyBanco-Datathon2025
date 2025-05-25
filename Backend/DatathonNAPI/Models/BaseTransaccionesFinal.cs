@@ -15,5 +15,5 @@ public partial class BaseTransaccionesFinal
 
     public string? TipoVenta { get; set; }
 
-    public string? Monto { get; set; }
+    public decimal? Monto { get; set; }
 }
