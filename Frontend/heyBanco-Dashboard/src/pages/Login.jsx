@@ -54,7 +54,7 @@ const Login = () => {
         setIsLoading(true);
     
         const requestBody = {
-          UserID: parseInt(UserID, 10),
+          UserID: UserID,
           Password: Password,
         };
     
@@ -66,6 +66,7 @@ const Login = () => {
           const token = response?.data?.token;
           setUserID('');
           setPassword('');
+          localStorage.setItem('token', token);
 
           setSuccessMsg('Inicio de Sesión Exitoso.');
           setTimeout(() => navigate('/dashboard'), 1500);
