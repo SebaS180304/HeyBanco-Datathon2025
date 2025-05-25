@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Box, Toolbar, IconButton, AppBar, Avatar, Menu, MenuItem } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import MenuIcon from '@mui/icons-material/Menu';
 import LogoutIcon from '@mui/icons-material/Logout';
 import logo from '/assets/logoB.svg';
 
 const Navbar = ({ drawerWidth, onMenuClick }) => {
+    const navigate = useNavigate();
+
     const [anchorEl, setAnchorEl] = useState(null);
 
     const handleAvatarClick = (e) => {
@@ -17,7 +20,7 @@ const Navbar = ({ drawerWidth, onMenuClick }) => {
 
     const handleLogout = () => {
         localStorage.removeItem('token');
-        window.location.href = '/';
+        navigate('/');
     };
 
     return (
@@ -48,8 +51,13 @@ const Navbar = ({ drawerWidth, onMenuClick }) => {
                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                     >
-                        <MenuItem onClick={{handleLogout}}>
-                            <LogoutIcon sx={{ mr: 1 }} fontSize='small' color="primary" />
+                        <MenuItem
+                            onClick={() => {
+                              handleMenuClose();
+                              handleLogout();
+                            }}
+                        >
+                            <LogoutIcon sx={{ mr: 1 }} fontSize="small" color="primary" />
                             Cerrar Sesión
                         </MenuItem>
                     </Menu>

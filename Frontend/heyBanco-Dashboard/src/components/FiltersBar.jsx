@@ -186,7 +186,7 @@ const FiltersBar = ({ onApply }) => {
         </Grid>
         {/* Botón Aplicar filtros */}
         <Grid item>
-          <Button variant="contained" onClick={handleApply}>
+          <Button variant="contained" onClick={handleApply} sx={{ fontWeight: 'bold' }}>
             Aplicar filtros
           </Button>
         </Grid>

@@ -1,13 +1,16 @@
 import React from 'react';
 import { Box, Drawer, List, ListItem, ListItemIcon, ListItemButton, ListItemText, Toolbar, IconButton } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
 
 const Sidebar = ({ drawerWidth, mobileOpen, onDrawerToggle }) => {
+    const navigate = useNavigate();
+
     const handleLogout = () => {
         localStorage.removeItem('token');
-        window.location.href = '/';
+        navigate('/');
     };
 
     const drawer = (
